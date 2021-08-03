@@ -8,36 +8,31 @@ body, html {
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
 }
-
 body {
   font-family: sans-serif;
   padding: 50px;
   line-height: 1.4;
-  max-width: 60%;
   margin: auto;
   background-color: #000000;
 }
-
 h2 {
   color: #f5c518;
   font-size: 30px;
 }
-
 #jumbotron {
   margin-top: 20px;
+  width: 60%;
+  margin: 0 auto;
 }
-
 .container .jumbotron {
   height: 500px;
   position: relative;
 }
-
 .container .jumbotron .jumbotron__background img {
   position: absolute;
   width: 100%;
   height: 100%;
 }
-
 .container .jumbotron .jumbotron__infos{
   color: #fff;
   opacity: 1;
@@ -64,11 +59,9 @@ h2 {
   overflow: hidden;
   background-color: #121212;
 }
-
 .navbar li {
   float: left;
 }
-
 .navbar li a {
   display: block;
   color: white;
@@ -80,136 +73,12 @@ h2 {
 .navbar li a:hover {
   background-color: #111;
 }
-
 .title {
   font-size: 25px;
   color: #FFF;
   font-weight: bold;
   margin-bottom: 25px;
 }
-
-.item {
-  margin: 20px 10px;
-  background-color: #fff;
-  box-shadow: 0 15px 35px #3232321a,0 5px 15px #0000001a;
-  transition: transform 0.3s;
-  transform: translate3d(0, -1px, 0);
-}
-
-.item:hover  {
-  transform: translate3d(0, -10px, 0);
-}
-
-.item img {
-  display: block;
-  width: 100%;
-}
-
-.item__body {
-  padding: 25px;
-}
-
-.item__title {
-  font-size: 24px;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #232323;
-}
-
-.item__description {
-  color: #585858;
-}
-
-.items {
-  position: relative;
-}
-
-/**
-CAROUSEL
- */
-.carousel {
-  position: relative;
-}
-
-.carousel__container {
-  transition: transform 0.3s;
-  transform: translate3d(0, 0, 0);
-}
-
-.carousel__container::after {
-  content: '';
-  clear: both;
-  display: table;
-}
-
-.carousel__item {
-  float: left;
-}
-
-.carousel__next, .carousel__prev {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: #FFF url(right.svg) center center no-repeat;
-  background-size:  20px 20px;
-  border-radius: 50%;
-  top: 50%;
-  margin-top: -20px;
-  right: -20px;
-  box-shadow: 0 15px 35px #3232321a,0 5px 15px #0000001a;
-  cursor: pointer;
-  transition: transform 0.3s, opacity 0.3s;
-}
-
-.carousel__next:hover, .carousel__prev:hover {
-  transform: scale(1.2)
-}
-
-.carousel__prev {
-  background-image: url(left.svg);
-  right: auto;
-  left: -20px;
-}
-
-.carousel__next--hidden, .carousel__prev--hidden {
-  opacity: 0;
-}
-
-.carousel__item .item {
-  cursor: pointer;
-}
-
-.carousel__pagination {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  display: none;
-}
-
-.carousel__pagination__button {
-  background-color: #fff;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  margin: 0 3px;
-  box-shadow: 0 2px 5px #3232321a;
-  transition: transform 0.3s;
-  cursor: pointer;
-}
-
-.carousel__pagination__button--active, .carousel__pagination__button:hover {
-  transform: scale(1.4);
-}
-
-@media screen and (min-width: 800px) {
-  .carousel__pagination {
-    display: block;
-  }
-}
-
  /* The Modal (background) */
  .modal {
   display: none; 
@@ -219,13 +88,13 @@ CAROUSEL
   top: 0;
   width: 100%;
   height: 100%; 
-  overflow: auto;
-  background-color: #1f1f1f;
+  overflow: hidden;
   background-color: rgba(0,0,0,0.4);
 }
-
 /* Modal Content/Box */
 .modal-content {
+  transform: translate(0, -33%);
+  margin: 0 auto;
   background-color: #1f1f1f;
   margin: 15% auto;
   padding: 20px;
@@ -233,7 +102,6 @@ CAROUSEL
   width: 80%; 
   color: #fff;
 }
-
 /* The Close Button */
 .close {
   color: #aaa;
@@ -241,48 +109,40 @@ CAROUSEL
   font-size: 28px;
   font-weight: bold;
 }
-
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
 } 
-
 .header-infos {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
 }
-
 li {
   list-style: none;
 }
-
 .movie-infos-list li, .movies-infos-genres li {
   display: inline;
   margin-right: 5px;
   color:#8a8a8a;
 }
-.staff-infos span{
+.staff_infos span{
   font-size: 1rem;
   font-weight: bold;
 }
-
 .movie-infos2 {
   display: flex;
   flex-direction: row;
 }
-
 .body_container {
   display: flex;
-
+  width: 80%;
 }
-
 .img_container {
   margin-right: 30px;
 }
-
 .movies-infos-genres a {
   border: 1px solid white;
   border-radius: 10px;
@@ -292,15 +152,15 @@ li {
   background-color: #1f1f1f;
   margin: 1px;
 }
-
+.movies-infos-genres a {
+  margin-right: 7px;
+}
 .movies-infos-genres a:visited, .movie-infos2 div a {
   color: #fff;
 }
-
 .movies-infos-genres a:hover {
   background-color: #707070;
 }
-
 .movie-infos2 div {
   width: 100px;
   margin: 5px;
@@ -308,33 +168,126 @@ li {
   display: flex;
   flex-direction: column;
 }
-
 .imdb-rating span {
  color: #f5c518;
 }
-
 .my-rating span {
   color: #bcbcbc;
 }
-
 .movie-infos2 div a{
   font-size: 15px;
   border-radius: 5px;
   text-decoration: none;
 }
-
-.staff-infos, .movie-infos-list { 
+.staff_infos ul, .movie-infos-list { 
   padding-left: 0;
 }
-
 .imdb-rating a:hover, .my-rating a:hover {
   background-color: #303030;
 }
-
-.staff-infos a:visited {
+.staff_infos a:visited {
   color: #5799ef;
 }
-
-.staff-infos a {
+.staff_infos a {
   text-decoration: none;
+}
+.staff_infos a:hover {
+  text-decoration: underline;
+}
+.movie_title {
+  margin-top: 40px;
+}
+.body-infos .staff_infos li::after, .movie_title::after {
+  display: inline-block;
+  content: "";
+  border-top: 1px solid #4c4c4c;
+  width: 100%;
+  transform: translateY(-0.3rem);
+}
+.staff_infos span {
+  margin-right: 8px;
+}
+
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+.carousel-container {
+  width: 1280px;
+  margin: 50px auto;
+  min-height: 200px;
+  position: relative;
+}
+@media screen and (max-width: 768px) {
+  .carousel-container {
+    width: 80%;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .carousel-container {
+    width: 85%;
+  }
+}
+.carousel-container .carousel-inner {
+  overflow: hidden;
+}
+.carousel-container .track {
+  display: inline-flex;
+  transition: transform 0.5s;
+}
+.carousel-container .card-container {
+  width: 259px;
+  flex-shrink: 0;
+  height: 250px;
+  padding-right: 15px;
+  box-sizing: border-box;
+}
+.carousel-container .card-container .card {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.nav button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+  position: absolute;
+  top: 60%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.nav .prev {
+  left: -30px;
+  display: none;
+}
+.nav .prev.show {
+  display: block;
+}
+.nav .next {
+  right: -30px;
+}
+.nav .next.hide {
+  display: none;
+}
+.card > * {
+  flex: 1;
+}
+.card .img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+.card .info {
+  flex-basis: 40px;
+  background: #333;
+  color: #fff;
+  flex-grow: 0;
+  padding: 10px;
+  box-sizing: border-box;
 }

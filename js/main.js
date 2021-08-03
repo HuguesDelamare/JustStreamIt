@@ -1,208 +1,65 @@
-class Carousel {
-  /**
-   * This callback type is called `requestCallback` and is displayed as a global symbol.
-   *
-   * @callback moveCallback
-   * @param {number} index
-   */
 
-  /**
-   *
-   * @param {HTMLElement} element
-   * @param {Object} options
-   * @param {Object} [options.slidesToScroll=1] Nombre d'éléments à faire défiler
-   * @param {Object} [options.slidesVisible=1] Nombre d'éléments visible dans un slide
-   * @param {boolean} [options.loop=false] Doit-t-on boucler en fin de carousel
-   * @param {boolean} [options.pagination=false]
-   * @param {boolean} [options.navigation=true]
-   */
-  constructor (element, options = {}) {
-    this.element = element
-    this.options = Object.assign({}, {
-      slidesToScroll: 1,
-      slidesVisible: 1,
-      loop: false,
-      pagination: false,
-      navigation: true
-    }, options)
-    let children = [].slice.call(element.children)
-    this.isMobile = false
-    this.currentItem = 0
-    this.moveCallbacks = []
-
-    // Modification du DOM
-    this.root = this.createDivWithClass('carousel')
-    this.container = this.createDivWithClass('carousel__container')
-    this.root.setAttribute('tabindex', '0')
-    this.root.appendChild(this.container)
-    this.element.appendChild(this.root)
-    this.items = children.map((child) => {
-      let item = this.createDivWithClass('carousel__item')
-      item.appendChild(child)
-      this.container.appendChild(item)
-      return item
-    })
-    this.setStyle()
-    if (this.options.navigation) {
-      this.createNavigation()
-    }
-    if (this.options.pagination) {
-      this.createPagination()
-    }
-
-    // Evenements
-    this.moveCallbacks.forEach(cb => cb(0))
-    this.onWindowResize()
-    window.addEventListener('resize', this.onWindowResize.bind(this))
-    this.root.addEventListener('keyup', e => {
-      if (e.key === 'ArrowRight' || e.key === 'Right') {
-        this.next()
-      } else if (e.key === 'ArrowLeft' || e.key === 'Left') {
-        this.prev()
+/**
+ * Asynch function to get and display all the movies by category
+ * @param {array} array 
+ */
+async function getMovieData (array) {
+  array.forEach(element => {
+    if (element != "bestMovies") {
+      for (i=1; i <= 10; i++) {
+        var data = fetchData(`http://localhost:8000/api/v1/titles/?genre=${element}&sort_by=-imdb_score&page=`+i)
+        .then(value => {
+          var node = document.getElementById(`${element}`)
+          var sliders = node.querySelector('.track')
+          result = value.results
+          result.map(function (cur) {
+            sliders.insertAdjacentHTML(
+              "beforeend",
+              `
+              <div class="card-container">
+                <div class="card" data-title="${cur.title}">
+                <div class="img"><img class="img" id="${cur.id}" src="${cur.image_url}"></div>
+                </div>
+              </div>
+              `
+            )
+          })
+        })
       }
-    })
-  }
-
-  /**
-   * Applique les bonnes dimensions aux éléments du carousel
-   */
-  setStyle () {
-    let ratio = this.items.length / this.slidesVisible
-    this.container.style.width = (ratio * 100) + "%"
-    this.items.forEach(item => item.style.width = ((100 / this.slidesVisible) / ratio) + "%")
-  }
-
-  /**
-   * Crée les flêches de navigation dans le DOM
-   */
-  createNavigation () {
-    let nextButton = this.createDivWithClass('carousel__next')
-    let prevButton = this.createDivWithClass('carousel__prev')
-    this.root.appendChild(nextButton)
-    this.root.appendChild(prevButton)
-    nextButton.addEventListener('click', this.next.bind(this))
-    prevButton.addEventListener('click', this.prev.bind(this))
-    if (this.options.loop === true) {
-      return
-    }
-    this.onMove(index => {
-      if (index === 0) {
-        prevButton.classList.add('carousel__prev--hidden')
-      } else {
-        prevButton.classList.remove('carousel__prev--hidden')
-      }
-      if (this.items[this.currentItem + this.slidesVisible] === undefined) {
-        nextButton.classList.add('carousel__next--hidden')
-      } else {
-        nextButton.classList.remove('carousel__next--hidden')
-      }
-    })
-  }
-
-  /**
-   * Crée la pagination dans le DOM
-   */
-  createPagination () {
-    let pagination = this.createDivWithClass('carousel__pagination')
-    let buttons = []
-    this.root.appendChild(pagination)
-    for (let i = 0; i < this.items.length; i = i + this.options.slidesToScroll) {
-      let button = this.createDivWithClass('carousel__pagination__button')
-      button.addEventListener('click', () => this.gotoItem(i))
-      pagination.appendChild(button)
-      buttons.push(button)
-    }
-    this.onMove(index => {
-      let activeButton = buttons[Math.floor(index / this.options.slidesToScroll)]
-      if (activeButton) {
-        buttons.forEach(button => button.classList.remove('carousel__pagination__button--active'))
-        activeButton.classList.add('carousel__pagination__button--active')
-      }
-    })
-  }
-
-  /**
-   *
-   */
-  next () {
-    this.gotoItem(this.currentItem + this.slidesToScroll)
-  }
-
-  prev () {
-    this.gotoItem(this.currentItem - this.slidesToScroll)
-  }
-
-  /**
-   * Déplace le carousel vers l'élément ciblé
-   * @param {number} index
-   */
-  gotoItem (index) {
-    if (index < 0) {
-      if (this.options.loop) {
-        index = this.items.length - this.slidesVisible
-      } else {
-        return
-      }
-    } else if (index >= this.items.length || (this.items[this.currentItem + this.slidesVisible] === undefined && index > this.currentItem)) {
-      if (this.options.loop) {
-        index = 0
-      } else {
-        return
+    }else {
+      for (i=1; i <= 10; i++) {
+        var data = fetchData(`http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=`+i)
+        .then(value => {
+          var node = document.getElementById(`${element}`)
+          var sliders = node.querySelector('.track')
+          result = value.results
+          result.map(function (cur) {
+            sliders.insertAdjacentHTML(
+              "beforeend",
+              `
+              <div class="card-container">
+                <div class="card" data-title="${cur.title}">
+                <div class="img"><img class="img" id="${cur.id}" src="${cur.image_url}"></div>
+                </div>
+              </div>
+              `
+            )
+          })
+        })
       }
     }
-    let translateX = index * -100 / this.items.length
-    this.container.style.transform = 'translate3d(' + translateX + '%, 0, 0)'
-    this.currentItem = index
-    this.moveCallbacks.forEach(cb => cb(index))
-  }
-
-  /**
-   * Rajoute un écouteur qui écoute le déplacement du carousel
-   * @param {moveCallback} cb
-   */
-  onMove (cb) {
-    this.moveCallbacks.push(cb)
-  }
-
-  /**
-   * Ecouteur pour le redimensionnement de la fenêtre
-   */
-  onWindowResize () {
-    let mobile = window.innerWidth < 800
-    if (mobile !== this.isMobile) {
-      this.isMobile = mobile
-      this.setStyle()
-      this.moveCallbacks.forEach(cb => cb(this.currentItem))
-    }
-  }
-
-  /**
-   * Helper pour créer une div avec une classe
-   * @param {string} className
-   * @returns {HTMLElement}
-   */
-  createDivWithClass (className) {
-    let div = document.createElement('div')
-    div.setAttribute('class', className)
-    return div
-  }
-
-  /**
-   * @returns {number}
-   */
-  get slidesToScroll () {
-    return this.isMobile ? 1 : this.options.slidesToScroll
-  }
-
-  /**
-   * @returns {number}
-   */
-  get slidesVisible () {
-    return this.isMobile ? 1 : this.options.slidesVisible
-  }
+  })
 }
 
+/**
+ * Modal class to display data from clicked carousel movie
+ * @class
+ */
 class Modal {
+  /**
+   * @param {HTMLElement} element 
+   * @constructor
+   */
   constructor (element) {
     this.image_url = element.image_url,
     this.title = element.title,
@@ -236,14 +93,17 @@ class Modal {
           <ul class="movie-infos-list">
             <li>${this.date_published}</li>
             <li>${this.rated}</li>
-            <li>${this.duration}</li>
+            <li>${this.duration} min</li>
+          </ul>
+          <ul class="movie-infos-list">
+            <li>${this.countries}</li></li>
           </ul>
         </div>
         <div class="movie-infos2">
           <div class="imdb-rating">
             <p>IMDb RATING</p>
             <a href="#"><span class="material-icons">star</span> ${this.score}/10</a>
-            <p>${this.votes}</p>
+            <p>${this.votes} votes</p>
           </div>
           <div class="my-rating">
             <p>YOUR RATING</p>
@@ -257,39 +117,54 @@ class Modal {
         <a><img src="${this.image_url}" alt="moviePicture"></a>
       </div>
       <div class="body-infos">
-        <div class="movies-infos-genres" id="movies-infos-genres">
-     
+        <div class="movies-infos-genres" id="movies-infos-genres"></div>
+        <div class="movie_title"<p>${this.description}</p></div>
+        <div class="staff_infos">
+          <ul>
+            <li><p><span>Directors</span> <a href="#"> ${this.directors}</a></p></li>
+            <li><p><span>Writer</span><a href="#"> ${this.writers}</a></p></li>
+            <li><p id="actors_list"><span>Stars</span></p></li>
+          </ul>
         </div>
-        <p>${this.description}</p>
-        <ul class="staff-infos">
-          <li><p><span>Directors</span> <a href="#"> ${this.directors}</a></p></li>
-          <li><p><span>Writer</span><a href="#"> ${this.writers}</a></p></li>
-          <li><p><span>Stars</span><a href="#"> ${this.actors}</a></p></li>
-        </ul>
       </div>
     </div>
     `
   this.modal_content.innerHTML = this.html
   this.getGenres(this.genres)
+  this.getActors(this.actors)
   }
 
   /**
-   * 
+   * Get method to show all actors from a movie in modal
+   * @param {array} actors 
+   */
+  getActors (actors) {
+    let actors_p = document.getElementById('actors_list')
+    actors.forEach(element => {
+      let a = document.createElement('a')
+      a.setAttribute('href', '#')
+      a.innerHTML = element + " "
+      actors_p.append(a)
+    });
+  }
+
+  /**
+   * Get method to show all the genres from a movie in modal
    * @param {array} genres 
    */
   getGenres (genres) {
-    this.genres_div = document.getElementById('movies-infos-genres')
-    this.genres.forEach(element => {
-      var a = document.createElement('a')
+    let genres_div = document.getElementById('movies-infos-genres')
+    genres.forEach(element => {
+      let a = document.createElement('a')
       a.setAttribute('class', '')
       a.setAttribute('id', '')
       a.innerHTML = element
-      this.genres_div.appendChild(a)
+      genres_div.appendChild(a)
     })
   }
 
  /**
-  * Helper pour créer une div avec une classe
+  * Helper to create a div with a class
   * @param {string} className
   * @returns {HTMLElement}
   */
@@ -301,62 +176,23 @@ class Modal {
 }
 
 /**
- * 
- * @param {array} array
+ * Fetch method to get the data from the API url
+ * @param {string} url
+ * @returns {json} 
  */
-function insertData(array) {
-  array.forEach(function (elementNode) {
-    let node = document.getElementById(elementNode)
-    let category = node.id
-    let childrens = node.children[0].firstChild.children
-    if (category == 'bestMovies') {
-      let data = fetchData(`http://localhost:8000/api/v1/titles/?format=json&sort_by=-imdb_score`)
-      .then(value => {
-        var movies = value.results;
-        for (i = 0; i < childrens.length; i++) {
-          var div = childrens[i].getElementsByClassName('item__image')[0]
-          div.setAttribute('data-title', movies[i].title)
-          var img = document.createElement('img')
-          img.setAttribute('src', movies[i].image_url)
-          img.setAttribute('id', movies[i].id)
-          div.append(img)
-        }
-      })     
-    } else {
-      let data = fetchData(`http://localhost:8000/api/v1/titles/?format=json&sort_by=-imdb_score&genre=${category}`)
-      .then(value => {
-        let movies = value.results;
-        for (i = 0; i < childrens.length; i++) {
-          let div = childrens[i].getElementsByClassName('item__image')[0]
-          div.setAttribute('data-title', movies[i].title)
-          let img = document.createElement('img')
-          img.setAttribute('src', movies[i].image_url)
-          img.setAttribute('id', movies[i].id)
-          div.append(img)
-        }
-      })
-    }
-  })
-}
-
-
-/**
- * 
- * 
- */
-function fetchData(url) {
+function fetchData (url) {
   return fetch(url)
   .then(response => {
-    return response.json();
+    return response.json()
   })
   .catch(err => console.log("Problem with fetch:" + err))
 }
 
 /**
- *
- * 
+ * Function to create the jumbotron and display the first best movie in database
+ * Jumbotron
  */
-function jumbotron() {
+function jumbotron () {
   let jumbotron = document.getElementById('jumbotron')
   let jumbotron__background = jumbotron.getElementsByTagName('div')[0]
   let jumbotron__infos = jumbotron.getElementsByTagName('div')[1]
@@ -371,26 +207,55 @@ function jumbotron() {
   })
 }
 
+
 // ON READY 
 let onReady = function () {
+  let carouselWidth = document.querySelector('.carousel-container').offsetWidth
+  let categorie__array = ['bestMovies','action','adventure','romance']
+
   jumbotron()
-  let categorie__array = ['bestMovies', 'romance', 'action', 'adventure']
-  categorie__array.forEach(function (element) {
-    new Carousel(document.querySelector(`#${element}`), {
-      slidesVisible: 4,
-      slidesToScroll: 1,
-      loop: true
-    })    
+  getMovieData(categorie__array)
+  
+  // Making the carousel slide Left and Right
+  nav = document.querySelectorAll('.nav').forEach(node => {
+    let track = node.previousElementSibling.firstElementChild
+    let prev = node.querySelector('.prev')
+    let next = node.querySelector('.next')
+    let index = 0
+
+    prev.addEventListener('click', () => {
+      index--;
+      next.classList.remove('hide')
+      if (index === 0) {
+        prev.classList.remove('show')
+      }
+      track.style.transform = `translateX(-${index * carouselWidth}px)`
+    })
+
+    next.addEventListener('click', () => {
+      index++;
+      prev.classList.add('show')
+      track.style.transform = `translateX(-${index * carouselWidth}px)`
+      
+      if (track.offsetWidth - (index * carouselWidth) < carouselWidth) {
+        next.classList.add('hide')
+      }
+    })
   })
 
-  // Insert les datas dans les divs
-  insertData(categorie__array)
+  //
+  window.addEventListener('resize', () => {
+    carouselWidth = document.querySelector('.carousel-container').offsetWidth
+  })
   
   // Select clicked movie
-  document.querySelectorAll('.item__image').forEach(item => {
-    let modalDiv = document.getElementById("modal")
+  var track = document.querySelectorAll('.track')
+  
+  document.querySelectorAll('.track').forEach(node => {
+    node.children.firstElementChild
+    let modalDiv = document.getElementById('modal')
 
-    item.addEventListener('click', event => {
+    node.addEventListener('click', event => {
       // Displaying the modal
       modalDiv.style.display = "block"
       
@@ -406,8 +271,14 @@ let onReady = function () {
             modalDiv.style.display = "none"
           }
         }
+        // When user esc click the modal will close
+        window.addEventListener('keydown', function (event){
+          if (event.key == "Escape"){
+            modalDiv.style.display = "none"
+          }
+        })
 
-        //
+        // Will close the modal when click on X button
         span.onclick = function() {
           modalDiv.style.display = "none";
         }
